@@ -1,65 +1,234 @@
+"use client";
 import Image from "next/image";
 
 export default function Home() {
+  const pfps = [];
+  for (let i = 3062; i <= 3259; i++) pfps.push(`/images/IMG_${i}.jpg`);
+
+  // Make sure the innermost ring radius leaves a clear spot for a 54px logo (with a little buffer)
+  const rings = [
+    { count: 10, radius: 65 },
+    { count: 18, radius: 120 },
+    { count: 28, radius: 183 },
+    { count: 36, radius: 250 },
+    { count: 46, radius: 315 },
+    { count: 55, radius: 380 },
+  ];
+
+  let idx = 0;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="page">
+      {/* LEFT PANEL */}
+      <aside className="hero">
+        <h1>Ritty Map</h1>
+        <p>
+          198 builders <br />
+          one ecosystem
+        </p>
+        <button>198+ Members</button>
+      </aside>
+
+      {/* AVATAR RINGS & CENTERED LOGO */}
+      <section className="map">
+        {/* Center logo */}
+        <div className="center-logo">
+          <Image
+            src="/ritty-logo.png"
+            width={54}
+            height={54}
+            alt="Ritty Logo"
+            className="logo"
+            priority
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        {/* Avatar rings */}
+        {rings.map((ring, ringIndex) => (
+          <div
+            key={ringIndex}
+            className="ring"
+            style={{
+              width: ring.radius * 2,
+              height: ring.radius * 2,
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            {Array.from({ length: ring.count }).map((_, i) => {
+              if (idx >= pfps.length) return null;
+              const img = pfps[idx++];
+              const angle = (360 / ring.count) * i;
+              return (
+                <div
+                  key={i}
+                  className="avatarWrap"
+                  style={{
+                    transform: `
+                      rotate(${angle}deg)
+                      translate(${ring.radius}px)
+                      rotate(${-angle}deg)
+                    `,
+                  }}
+                >
+                  <img src={img} className="avatar" alt="avatar" />
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </section>
+
+      <style jsx>{`
+        .page {
+          min-height: 100vh;
+          width: 100vw;
+          display: flex;
+          align-items: flex-start;
+          background: linear-gradient(180deg, #b695f5 0%, #9756e2 90%, #511986 100%);
+          position: relative;
+          overflow-x: hidden;
+        }
+        .hero {
+          width: 370px;
+          min-width: 260px;
+          max-width: 400px;
+          margin-top: 65px;
+          margin-left: 64px;
+          padding: 32px 18px 32px 28px;
+          color: #fff;
+          border-radius: 28px;
+          background: rgba(255, 255, 255, 0.04);
+          box-shadow: 0 4px 24px rgba(90, 21, 150, 0.07);
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .hero h1 {
+          margin: 0 0 18px 0;
+          font-size: 40px;
+          font-weight: 700;
+          line-height: 1.1;
+        }
+        .hero p {
+          margin: 0 0 30px 0;
+          opacity: 0.92;
+          font-size: 22px;
+          font-weight: 400;
+          line-height: 1.6;
+        }
+        .hero button {
+          font-size: 18px;
+          font-weight: 500;
+          border: none;
+          padding: 17px 55px;
+          border-radius: 24px;
+          background: linear-gradient(90deg, #d2b5fa 0%, #ce71ff 100%);
+          color: #fff;
+          box-shadow: 0 2px 12px #bb7cf644;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.2s;
+        }
+        .hero button:hover {
+          background: linear-gradient(90deg, #e7d6ff 0%, #e292ff 100%);
+          transform: scale(1.04);
+        }
+        .map {
+          flex: 1;
+          position: relative;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: auto;
+        }
+        .center-logo {
+          position: absolute;
+          left: 50%;
+          top: 53%;
+          transform: translate(-15%, -50%);
+          z-index: 50;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .logo {
+          width: 60px !important;
+          height: 64px !important;
+          border-radius: 50%;
+          background: none;
+          box-shadow: none;
+          padding: 0;
+        }
+        .ring {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          border: 2.5px solid rgba(255, 255, 255, 0.045);
+        }
+        .avatarWrap {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+        }
+        .avatar {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 3px solid #fff;
+          box-shadow: 0 1px 8px 0 #39248033;
+          background: #f7f6fa;
+          transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .avatar:hover {
+          transform: scale(1.13);
+          box-shadow: 0 5px 40px 10px #b287e6;
+          z-index: 22;
+        }
+        @media (max-width: 1100px) {
+          .hero {
+            margin-left: 14px;
+            width: 215px;
+            padding: 22px 8px 22px 14px;
+          }
+          .hero h1 {
+            font-size: 22px;
+          }
+          .hero button {
+            font-size: 14px;
+            padding: 11px 32px;
+          }
+          .avatar {
+            width: 30px;
+            height: 30px;
+          }
+        }
+        @media (max-width: 700px) {
+          .page {
+            flex-direction: column;
+          }
+          .hero {
+            width: 100%;
+            max-width: none;
+            margin: 12px auto 0 auto;
+            border-radius: 14px;
+          }
+          .map {
+            min-height: 360px;
+          }
+          .ring {
+            border-width: 1.5px;
+          }
+          .avatar {
+            width: 18px;
+            height: 18px;
+          }
+          .logo {
+            width: 22px !important;
+            height: 22px !important;
+          }
+        }
+      `}</style>
+    </main>
   );
 }
