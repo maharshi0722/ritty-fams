@@ -363,14 +363,7 @@ object-fit:cover;
 outline:none;
 box-shadow:none;
 
-/* softer border */
-border:
-2px solid rgba(
-255,
-255,
-255,
-0.85
-);
+
 
 background:
 transparent;
