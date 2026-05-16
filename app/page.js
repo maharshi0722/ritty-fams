@@ -331,13 +331,7 @@ top:50%;
 transform:
 translate(-50%,-50%);
 
-border:
-1px solid rgba(
-255,
-255,
-255,
-.05
-);
+
 
 border-radius:50%;
 }
