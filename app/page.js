@@ -199,7 +199,7 @@ overflow-y:auto;
 overflow-x:hidden;
 
 padding:
-px 0;
+10px 0;
 padding-left:50px;
 
 display:flex;
@@ -331,7 +331,11 @@ top:50%;
 transform:
 translate(-50%,-50%);
 
+border:none;
 
+outline:none;
+
+box-shadow:none;
 
 border-radius:50%;
 }
