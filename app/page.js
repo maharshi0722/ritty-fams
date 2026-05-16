@@ -1,144 +1,118 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
+  const [rings, setRings] = useState([]);
+
+  const desktop = [
+    { count: 12, radius: 80 },
+    { count: 18, radius: 140 },
+    { count: 28, radius: 210 },
+    { count: 36, radius: 290 },
+    { count: 46, radius: 370 },
+    { count: 58, radius: 450 },
+  ];
+
+  const mobile = [
+    { count: 12, radius: 55 },
+    { count: 18, radius: 95 },
+    { count: 28, radius: 135 },
+    { count: 36, radius: 175 },
+    { count: 46, radius: 220 },
+    { count: 58, radius: 265 },
+  ];
+
+  useEffect(() => {
+    const update = () =>
+      setRings(window.innerWidth < 700 ? mobile : desktop);
+
+    update();
+
+    window.addEventListener("resize", update);
+
+    return () =>
+      window.removeEventListener("resize", update);
+  }, []);
 
   const pfps = [];
 
-  for(let i=3062;i<=3259;i++){
+  for (let i = 3062; i <= 3259; i++) {
     pfps.push(`/images/IMG_${i}.jpg`);
   }
 
-  const desktopRings = [
-    { count:10, radius:65 },
-    { count:18, radius:120 },
-    { count:28, radius:185 },
-    { count:36, radius:250 },
-    { count:46, radius:320 },
-    { count:55, radius:390 },
-  ];
+  let idx = 0;
 
-  const mobileRings = [
-    { count:10, radius:45 },
-    { count:18, radius:80 },
-    { count:28, radius:115 },
-    { count:36, radius:145 },
-    { count:46, radius:178 },
-    { count:55, radius:210 },
-  ];
+  return (
+    <main className="page">
 
-  const [rings,setRings]=useState(desktopRings);
+      <aside className="hero">
 
-  useEffect(()=>{
+        <h1>
+          Ritty
+          <br />
+          Fams
+        </h1>
 
-    const resize=()=>{
-
-      setRings(
-        window.innerWidth < 700
-        ? mobileRings
-        : desktopRings
-      );
-
-    };
-
-    resize();
-
-    window.addEventListener(
-      "resize",
-      resize
-    );
-
-    return()=>window.removeEventListener(
-      "resize",
-      resize
-    );
-
-  },[]);
-
-
-let idx=0;
-
-
-return(
-
-<main className="page">
-
-{/* TITLE */}
-
-<aside className="hero">
-
-<h1 className="title">
-
-Ritty
-<br/>
-Fams
-
-</h1>
-
-</aside>
+      </aside>
 
 
 
-{/* MAP */}
+      <section className="map">
 
-<section className="map">
+        {/* CENTER */}
 
-<div className="center">
+        <div className="center">
 
-<Image
-src="/ritty-logo.png"
-width={80}
-height={80}
-alt=""
-priority
-className="logo"
-/>
+          <Image
+            src="/ritty-logo.png"
+            width={90}
+            height={90}
+            alt=""
+            priority
+            className="logo"
+          />
 
-</div>
+        </div>
 
 
 
-{rings.map((ring,ringIndex)=>(
+        {rings.map((ring, ringIndex) => (
 
-<div
-key={ringIndex}
-className="ring"
+          <div
+            key={ringIndex}
+            className={`ring ${
+              ringIndex % 2
+              ? "reverse"
+              : ""
+            }`}
+            style={{
+              width: ring.radius * 2,
+              height: ring.radius * 2,
+            }}
+          >
 
-style={{
+            {Array.from({
+              length:ring.count
+            }).map((_,i)=>{
 
-width:
-ring.radius*2,
+              if(idx >= pfps.length)
+                return null;
 
-height:
-ring.radius*2
+              const img =
+              pfps[idx++];
 
-}}
->
+              const angle =
+              (360/ring.count)*i;
 
-{
+              return (
 
-Array.from({
-length:ring.count
-}).map((_,i)=>{
+                <div
+                  key={i}
+                  className="avatarWrap"
 
-if(idx>=pfps.length)
-return null;
-
-const img=
-pfps[idx++];
-
-const angle=
-(360/ring.count)*i;
-
-return(
-
-<div
-key={i}
-className="avatarWrap"
-
-style={{
+                  style={{
 
 transform:
 `
@@ -147,27 +121,33 @@ translate(${ring.radius}px)
 rotate(-${angle}deg)
 `
 
-}}
->
+                  }}
+                >
 
-<img
-src={img}
-className="avatar"
-/>
+                  <img
+                    src={img}
 
-</div>
+                    onError={(e)=>{
 
-)
+e.currentTarget.src =
+"/default-avatar.png";
 
-})
+                    }}
 
-}
+                    className="avatar"
+                  />
 
-</div>
+                </div>
 
-))}
+              );
 
-</section>
+            })}
+
+          </div>
+
+        ))}
+
+      </section>
 
 
 
@@ -175,13 +155,9 @@ className="avatar"
 
 .page{
 
-min-height:100vh;
+min-height:120vh;
 
-overflow-y:auto;
-overflow-x:hidden;
-
-padding-top:80px;   /* desktop */
-padding-bottom:80px;   /* desktop */
+overflow:auto;
 
 background:
 linear-gradient(
@@ -191,8 +167,12 @@ linear-gradient(
 #511986
 );
 
-position:relative;
 display:flex;
+
+position:relative;
+
+padding:
+80px 0;
 }
 
 
@@ -213,14 +193,14 @@ transparent 1px
 );
 
 background-size:
-90px 90px;
+80px 80px;
 
 opacity:.12;
 }
 
 
 
-/* TITLE */
+/* title */
 
 .hero{
 
@@ -236,9 +216,7 @@ z-index:20;
 }
 
 
-.title{
-
-margin:0;
+.hero h1{
 
 font-size:
 clamp(
@@ -247,29 +225,16 @@ clamp(
 100px
 );
 
-font-weight:700;
+margin:0;
 
 line-height:.9;
 
-letter-spacing:
--2px;
-
 color:white;
-
-text-shadow:
-0 10px 30px
-rgba(
-0,
-0,
-0,
-.15
-);
-
 }
 
 
 
-/* MAP */
+/* map */
 
 .map{
 
@@ -279,24 +244,26 @@ display:flex;
 justify-content:center;
 align-items:center;
 
-min-height:100vh;
-
 position:relative;
+
+min-height:1000px;
 }
 
 
+
+/* exact center */
 
 .center{
 
 position:absolute;
 
 left:50%;
-top:53%;
+top:52%;
 
 transform:
-translate(-25%,-50%);
+translate(-32%,-50%);
 
-z-index:50;
+z-index:100;
 }
 
 
@@ -319,8 +286,6 @@ top:50%;
 transform:
 translate(-50%,-50%);
 
-border-radius:50%;
-
 border:
 1px solid rgba(
 255,
@@ -328,9 +293,23 @@ border:
 255,
 .06
 );
+
+border-radius:50%;
+
+animation:
+spin 120s linear infinite;
 }
 
 
+
+
+
+
+
+
+
+
+/* avatars */
 
 .avatarWrap{
 
@@ -339,7 +318,6 @@ position:absolute;
 left:50%;
 top:50%;
 }
-
 
 
 .avatar{
@@ -352,68 +330,55 @@ border-radius:50%;
 object-fit:cover;
 
 border:
-3px solid white;
+2px solid white;
 
-transition:.2s;
-}
-
-
-.avatar:hover{
-
-transform:
-scale(1.1);
-
+background:white;
 }
 
 
 
-/* MOBILE */
+/* mobile */
 
 @media(max-width:700px){
 
 .hero{
 
-top:40px;
+top:20px;
 left:0;
 
 width:100%;
 
-transform:none;
-
 display:flex;
 justify-content:center;
+
+transform:none;
 }
 
 
-.title{
+.hero h1{
 
 font-size:42px;
-
 text-align:center;
 }
 
 
 .avatar{
 
-width:16px;
-height:16px;
-
-border-width:1px;
+width:18px;
+height:18px;
 }
 
 
 .logo{
 
-width:40px!important;
-height:40px!important;
+width:42px!important;
+height:42px!important;
 }
 
 }
 
 `}</style>
 
-</main>
-
-)
-
+    </main>
+  );
 }
