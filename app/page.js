@@ -4,115 +4,147 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
-  const [rings, setRings] = useState([]);
 
-  const desktop = [
-    { count: 12, radius: 80 },
-    { count: 18, radius: 140 },
-    { count: 28, radius: 210 },
-    { count: 36, radius: 290 },
-    { count: 46, radius: 370 },
-    { count: 58, radius: 450 },
-  ];
+const [rings,setRings]=useState([]);
 
-  const mobile = [
-    { count: 12, radius: 55 },
-    { count: 18, radius: 95 },
-    { count: 28, radius: 135 },
-    { count: 36, radius: 175 },
-    { count: 46, radius: 220 },
-    { count: 58, radius: 265 },
-  ];
+const desktop=[
+{count:12,radius:80},
+{count:18,radius:140},
+{count:28,radius:210},
+{count:36,radius:290},
+{count:46,radius:370},
+{count:58,radius:450},
+];
 
-  useEffect(() => {
-    const update = () =>
-      setRings(window.innerWidth < 700 ? mobile : desktop);
+const mobile=[
+{count:12,radius:55},
+{count:18,radius:95},
+{count:28,radius:135},
+{count:36,radius:175},
+{count:46,radius:220},
+{count:58,radius:265},
+];
 
-    update();
 
-    window.addEventListener("resize", update);
+useEffect(()=>{
 
-    return () =>
-      window.removeEventListener("resize", update);
-  }, []);
+const resize=()=>{
 
-  const pfps = [];
+setRings(
+window.innerWidth < 700
+? mobile
+: desktop
+);
 
-  for (let i = 3062; i <= 3259; i++) {
-    pfps.push(`/images/IMG_${i}.jpg`);
-  }
+};
 
-  let idx = 0;
+resize();
 
-  return (
-    <main className="page">
+window.addEventListener(
+"resize",
+resize
+);
 
-      <aside className="hero">
+return()=>window.removeEventListener(
+"resize",
+resize
+);
 
-        <h1>
-          Ritty
-          <br />
-          Fams
-        </h1>
-
-      </aside>
+},[]);
 
 
 
-      <section className="map">
+const pfps=[];
 
-        {/* CENTER */}
+for(let i=3062;i<=3259;i++){
 
-        <div className="center">
+pfps.push(
+`/images/IMG_${i}.jpg`
+);
 
-          <Image
-            src="/ritty-logo.png"
-            width={90}
-            height={90}
-            alt=""
-            priority
-            className="logo"
-          />
-
-        </div>
+}
 
 
+let idx=0;
 
-        {rings.map((ring, ringIndex) => (
 
-          <div
-            key={ringIndex}
-            className={`ring ${
-              ringIndex % 2
-              ? "reverse"
-              : ""
-            }`}
-            style={{
-              width: ring.radius * 2,
-              height: ring.radius * 2,
-            }}
-          >
+return(
 
-            {Array.from({
-              length:ring.count
-            }).map((_,i)=>{
+<main className="page">
 
-              if(idx >= pfps.length)
-                return null;
+{/* TITLE */}
 
-              const img =
-              pfps[idx++];
+<aside className="hero">
 
-              const angle =
-              (360/ring.count)*i;
+<h1>
+Ritual
+<br/>
+Ritty
+<br/>
+Fams
 
-              return (
+</h1>
 
-                <div
-                  key={i}
-                  className="avatarWrap"
+</aside>
 
-                  style={{
+
+
+{/* MAP */}
+
+<section className="map">
+
+<div className="center">
+
+<Image
+src="/ritty-logo.png"
+width={90}
+height={90}
+alt=""
+priority
+className="logo"
+/>
+
+</div>
+
+
+
+{rings.map((ring,r)=>(
+
+<div
+key={r}
+className="ring"
+
+style={{
+
+width:ring.radius*2,
+height:ring.radius*2
+
+}}
+>
+
+{
+
+Array.from({
+length:ring.count
+}).map((_,i)=>{
+
+if(idx>=pfps.length)
+return null;
+
+const img=
+pfps[idx++];
+
+const angle=
+(360/ring.count)*i;
+
+return(
+
+<div
+key={i}
+
+className="avatarWrap"
+
+style={{
 
 transform:
 `
@@ -121,33 +153,39 @@ translate(${ring.radius}px)
 rotate(-${angle}deg)
 `
 
-                  }}
-                >
+}}
+>
 
-                  <img
-                    src={img}
+<img
 
-                    onError={(e)=>{
+src={img}
 
-e.currentTarget.src =
-"/default-avatar.png";
+loading="lazy"
 
-                    }}
+className="avatar"
 
-                    className="avatar"
-                  />
+onError={(e)=>{
 
-                </div>
+e.currentTarget.style.display=
+"none";
 
-              );
+}}
 
-            })}
+/>
 
-          </div>
+</div>
 
-        ))}
+)
 
-      </section>
+})
+
+}
+
+</div>
+
+))}
+
+</section>
 
 
 
@@ -157,7 +195,16 @@ e.currentTarget.src =
 
 min-height:120vh;
 
-overflow:auto;
+overflow-y:auto;
+overflow-x:hidden;
+
+padding:
+px 0;
+padding-left:50px;
+
+display:flex;
+
+position:relative;
 
 background:
 linear-gradient(
@@ -166,13 +213,6 @@ linear-gradient(
 #8f4be2,
 #511986
 );
-
-display:flex;
-
-position:relative;
-
-padding:
-80px 0;
 }
 
 
@@ -200,19 +240,19 @@ opacity:.12;
 
 
 
-/* title */
+/* TITLE */
 
 .hero{
 
 position:absolute;
 
-left:60px;
+left:50px;
 top:50%;
 
 transform:
 translateY(-50%);
 
-z-index:20;
+z-index:10;
 }
 
 
@@ -220,38 +260,42 @@ z-index:20;
 
 font-size:
 clamp(
-52px,
+60px,
 8vw,
 100px
 );
 
+line-height:.9;
+
 margin:0;
 
-line-height:.9;
+font-weight:700;
 
 color:white;
 }
 
 
 
-/* map */
+/* MAP */
 
 .map{
 
 flex:1;
 
 display:flex;
+
 justify-content:center;
 align-items:center;
 
-position:relative;
+min-height:
+1100px;
 
-min-height:1000px;
+position:relative;
 }
 
 
 
-/* exact center */
+/* KEEP YOUR CENTER */
 
 .center{
 
@@ -267,6 +311,7 @@ z-index:100;
 }
 
 
+
 .logo{
 
 border-radius:50%;
@@ -274,7 +319,7 @@ border-radius:50%;
 
 
 
-/* rings */
+/* RINGS */
 
 .ring{
 
@@ -291,25 +336,15 @@ border:
 255,
 255,
 255,
-.06
+.05
 );
 
 border-radius:50%;
-
-animation:
-spin 120s linear infinite;
 }
 
 
 
-
-
-
-
-
-
-
-/* avatars */
+/* AVATAR */
 
 .avatarWrap{
 
@@ -318,6 +353,7 @@ position:absolute;
 left:50%;
 top:50%;
 }
+
 
 
 .avatar{
@@ -333,17 +369,33 @@ border:
 2px solid white;
 
 background:white;
+
+transition:.2s;
+}
+
+
+.avatar:hover{
+
+transform:
+scale(1.08);
+
 }
 
 
 
-/* mobile */
+/* MOBILE */
 
 @media(max-width:700px){
 
+.page{
+
+padding-top:50px;
+}
+
+
 .hero{
 
-top:20px;
+top:35px;
 left:0;
 
 width:100%;
@@ -357,8 +409,16 @@ transform:none;
 
 .hero h1{
 
-font-size:42px;
+font-size:40px;
+
 text-align:center;
+}
+
+
+.map{
+
+min-height:
+800px;
 }
 
 
@@ -366,6 +426,8 @@ text-align:center;
 
 width:18px;
 height:18px;
+
+border-width:1px;
 }
 
 
@@ -379,6 +441,8 @@ height:42px!important;
 
 `}</style>
 
-    </main>
-  );
+</main>
+
+)
+
 }
