@@ -359,14 +359,26 @@ border-radius:50%;
 
 object-fit:cover;
 
-border:
-2px solid white;
+/* remove dark edge */
+outline:none;
+box-shadow:none;
 
-background:white;
+/* softer border */
+border:
+2px solid rgba(
+255,
+255,
+255,
+0.85
+);
+
+background:
+transparent;
+
+display:block;
 
 transition:.2s;
 }
-
 
 .avatar:hover{
 
