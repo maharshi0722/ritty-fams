@@ -56,7 +56,7 @@ resize
 
 const pfps=[];
 
-for(let i=3062;i<=3259;i++){
+for(let i=3062;i<=3270;i++){
 
 pfps.push(
 `/images/IMG_${i}.jpg`
